@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_app/blocs/blocs/waterproofing_monitor_bloc.dart';
+import 'package:mobile_app/blocs/blocs/waterproofing_report_bloc.dart';
 import 'package:mobile_app/presentations/screens/mode-screen/mode_screen.dart';
 import 'package:mobile_app/presentations/screens/mode-screen/monitor_mode_screen.dart';
 import 'package:mobile_app/presentations/screens/mode-screen/report_mode_screen.dart';
@@ -41,11 +43,14 @@ ReliCBReportRepository reliCBReportRepository =
 
 //-------------------------------------------------------------
 class AppRouter {
+
   static ReliMonitorBloc reliMonitorBloc = ReliMonitorBloc();
   static ReliReportBloc reliReportBloc = ReliReportBloc();
   static LoginBloc loginBloc = LoginBloc();
   static DeforReportBloc deforReportBloc = DeforReportBloc();
   static DeforMonitorBloc deforMonitorBloc = DeforMonitorBloc();
+  static WFMonitorBloc wfMonitorBloc = WFMonitorBloc();
+  static WaterProofingReportBloc waterProofingReportBloc = WaterProofingReportBloc();
   Route onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
@@ -85,8 +90,8 @@ class AppRouter {
         case '/waterproofingreportscreen':
         return MaterialPageRoute(
           builder: 
-          (context) => BlocProvider<DeforReportBloc>.value(
-              value: deforReportBloc, child: WaterProofingReportScreen())
+          (context) => BlocProvider<WaterProofingReportBloc>.value(
+              value: waterProofingReportBloc, child: WaterProofingReportScreen())
           
         );
         break;
@@ -108,8 +113,8 @@ class AppRouter {
         case '/waterproofingmonitorscreen':
         return MaterialPageRoute(
           builder: 
-          (context) => BlocProvider<ReliMonitorBloc>.value(
-            value: reliMonitorBloc, child: WaterProofingMonitorScreen())
+          (context) => BlocProvider<WFMonitorBloc>.value(
+            value: wfMonitorBloc, child: WaterProofingMonitorScreen())
            
         );
         break;

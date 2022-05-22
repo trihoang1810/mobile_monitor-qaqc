@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_app/blocs/blocs/defor_bending_report_bloc.dart';
+import 'package:mobile_app/blocs/blocs/waterproofing_report_bloc.dart';
 import 'package:mobile_app/blocs/events/defor_report_event.dart';
+import 'package:mobile_app/blocs/events/waterproofing_report_event.dart';
 import 'package:mobile_app/blocs/states/defor_report_state.dart';
+import 'package:mobile_app/blocs/states/waterproofing_report_state.dart';
 import 'package:mobile_app/presentations/dialog/dialog.dart';
 import 'package:mobile_app/presentations/widgets/constant.dart';
 import 'package:mobile_app/presentations/widgets/error_state_widget.dart';
@@ -20,9 +23,7 @@ class WaterProofingReportScreen extends StatefulWidget {
 
 class _WaterProofingReportScreenState extends State<WaterProofingReportScreen> {
  
-   Completer<void> _completerDeforBending;
-  Completer<void> _completerDeforStatic;
-  Completer<void> _completerDeforRock;
+ Completer<void> _completerDeforBending;
 
   String _getUntil = "Đến ngày";
   String _getFrom = "Từ ngày";
@@ -66,7 +67,7 @@ class _WaterProofingReportScreenState extends State<WaterProofingReportScreen> {
           ),
           title: Text("Báo cáo kiểm tra độ chống thấm"),
         ),
-        body: BlocConsumer<DeforReportBloc, DeforReportState>(
+        body: BlocConsumer<WaterProofingReportBloc, WaterProofingReportState>(
           listener: (context, deforReportState) {},
           builder: (context, deforReportState) => 
           Padding(
@@ -75,8 +76,8 @@ class _WaterProofingReportScreenState extends State<WaterProofingReportScreen> {
               children: <Widget>[
                 RefreshIndicator(
                   onRefresh: () {
-                    BlocProvider.of<DeforReportBloc>(context).add(
-                        DeforBendingReportEventSearchingClicked(
+                    BlocProvider.of<WaterProofingReportBloc>(context).add(
+                        WFReportEventSearchingClicked(
                             startTime: _startDate, stopTime: _endDate));
                     return _completerDeforBending.future;
                   },
@@ -179,15 +180,15 @@ class _WaterProofingReportScreenState extends State<WaterProofingReportScreen> {
                                 //height/width ko khai báo sẽ để mặc định,
                                 text: "Truy xuất",
                                 onPressed: () {
-                                  BlocProvider.of<DeforReportBloc>(context).add(
-                                      DeforBendingReportEventSearchingClicked(
+                                  BlocProvider.of<WaterProofingReportBloc>(context).add(
+                                      WFReportEventSearchingClicked(
                                           startTime: _startDate,
                                           stopTime: _endDate));
                                 },
                               ),
                               SizedBox(
                                   height: SizeConfig.screenHeight * 0.0128),
-                              BlocBuilder<DeforReportBloc, DeforReportState>(
+                              BlocBuilder<WaterProofingReportBloc, WaterProofingReportState>(
                                 builder: (context, state) {
                                   if (state
                                       is DeforBendingReportStateLoadingRequest) {
@@ -320,7 +321,7 @@ class _WaterProofingReportScreenState extends State<WaterProofingReportScreen> {
                                             ],
                                           );
                                   } else if (state
-                                      is DeforBendingReportStateLoadingFailure) {
+                                      is WFReportStateLoadingFailure) {
                                     return Column(
                                       children: [
                                         SizedBox(height: 100),

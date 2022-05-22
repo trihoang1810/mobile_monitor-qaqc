@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_app/blocs/blocs/waterproofing_monitor_bloc.dart';
+import 'package:mobile_app/blocs/events/waterproofing_monitor_event.dart';
+import 'package:mobile_app/blocs/states/waterproofing_monitor_state.dart';
 import 'package:mobile_app/presentations/screens/monitor-main-screen/models/reliabilities/operating_params_reliability.dart';
 import 'package:mobile_app/presentations/widgets/constant.dart';
 import 'package:mobile_app/presentations/widgets/widget.dart';
@@ -54,17 +57,17 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
       });
     //  hubConnection.on("MonitorReliability", monitorReliabilityHandlers);
     } on TimeoutException {
-      BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventConnectFail(
+      BlocProvider.of<WFMonitorBloc>(context).add(WFMonitorEventConnectFail(
           errorPackage: ErrorPackage(
               message: "Không tìm thấy máy chủ",
               detail: "Vui lòng kiểm tra đường truyền!")));
     } on SocketException {
-      BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventConnectFail(
+      BlocProvider.of<WFMonitorBloc>(context).add(WFMonitorEventConnectFail(
           errorPackage: ErrorPackage(
               message: "Không tìm thấy máy chủ",
               detail: "Vui lòng kiểm tra đường truyền!")));
     } catch (e) {
-      BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventConnectFail(
+      BlocProvider.of<WFMonitorBloc>(context).add(WFMonitorEventConnectFail(
           errorPackage:
               ErrorPackage(message: "Lỗi xảy ra", detail: e.toString())));
     }
@@ -132,56 +135,55 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
           ),
           backgroundColor: Colors.white,
           body:
-           BlocConsumer<ReliMonitorBloc, ReliMonitorState>(
-            listener: (context, reliMonitorState) async {
-              if (reliMonitorState is ReliMonitorStateConnectFail) {
+           BlocConsumer<WFMonitorBloc, WFMonitorState>(
+            listener: (context, wfMonitorState) async {
+              if (wfMonitorState is WFMonitorStateConnectFail) {
                 loadingDialog.dismiss();
                 AlertDialogOneBtnCustomized(
                         context: context,
-                        title: reliMonitorState.errorPackage.message,
-                        desc: reliMonitorState.errorPackage.detail,
+                        title: wfMonitorState.errorPackage.message,
+                        desc: wfMonitorState.errorPackage.detail,
                         textBtn: "OK",
                         closePressed: () {},
                         onPressedBtn: () {})
                     .show();
-              } else if (reliMonitorState is ReliMonitorStateConnectSucessful) {
+              } else if (wfMonitorState is WFMonitorStateConnectSucessful) {
                 loadingDialog.dismiss();
-                data1 = reliMonitorState.reliMonitorData.soLanDongNapCaiDat
-                    .toString();
-                data2 = reliMonitorState.reliMonitorData.soLanDongNapHienTai
-                    .toString();
-                data3 = reliMonitorState.reliMonitorData.thoiGianGiuNapDong
-                    .toString();
-                data4 = reliMonitorState.reliMonitorData.thoiGianGiuNapMo
-                    .toString();
-                warning = reliMonitorState.reliMonitorData.alarm;
-                running = reliMonitorState.reliMonitorData.running;
+                // data1 = wfMonitorState.reliMonitorData.soLanDongNapCaiDat
+                //     .toString();
+                // data2 = wfMonitorState.reliMonitorData.soLanDongNapHienTai
+                //     .toString();
+                // data3 = wfMonitorState.reliMonitorData.thoiGianGiuNapDong
+                //     .toString();
+                // data4 = wfMonitorState.reliMonitorData.thoiGianGiuNapMo
+                //     .toString();
+                // warning = wfMonitorState.reliMonitorData.alarm;
+                // running = wfMonitorState.reliMonitorData.running;
 
                 // print(hubConnection.state.toString());
-              } else if (reliMonitorState is ReliMonitorStateDataUpdated) {
+              } else if (wfMonitorState is WFMonitorStateDataUpdated) {
                 loadingDialog.dismiss();
                 // print('chụp được state nè');
-                data1 = reliMonitorState.reliMonitorData.soLanDongNapCaiDat
-                    .toString();
-                data2 = reliMonitorState.reliMonitorData.soLanDongNapHienTai
-                    .toString();
-                data3 = reliMonitorState.reliMonitorData.thoiGianGiuNapDong
-                    .toString();
-                data4 = reliMonitorState.reliMonitorData.thoiGianGiuNapMo
-                    .toString();
-                warning = reliMonitorState.reliMonitorData.alarm;
-                running = reliMonitorState.reliMonitorData.running;
-              } else if (reliMonitorState is ReliMonitorStateLoadingRequest) {
+                 // data1 = wfMonitorState.reliMonitorData.soLanDongNapCaiDat
+                //     .toString();
+                // data2 = wfMonitorState.reliMonitorData.soLanDongNapHienTai
+                //     .toString();
+                // data3 = wfMonitorState.reliMonitorData.thoiGianGiuNapDong
+                //     .toString();
+                // data4 = wfMonitorState.reliMonitorData.thoiGianGiuNapMo
+                //     .toString();
+                // warning = wfMonitorState.reliMonitorData.alarm;
+                // running = wfMonitorState.reliMonitorData.running;
+
+              } else if (wfMonitorState is WFMonitorStateLoadingRequest) {
                 loadingDialog.show();
-              } else if (reliMonitorState is ReliCBMonitorStateLoadingRequest) {
-                loadingDialog.show();
-              }
-              if (reliMonitorState is ReliCBMonitorStateConnectFail) {
+              } 
+              if (wfMonitorState is WFMonitorStateConnectFail) {
                 loadingDialog.dismiss();
                 AlertDialogOneBtnCustomized(
                         context: context,
-                        title: reliMonitorState.errorPackage.message,
-                        desc: reliMonitorState.errorPackage.detail,
+                        title: wfMonitorState.errorPackage.message,
+                        desc: wfMonitorState.errorPackage.detail,
                         textBtn: "OK",
                         closePressed: () {},
                         onPressedBtn: () {})
