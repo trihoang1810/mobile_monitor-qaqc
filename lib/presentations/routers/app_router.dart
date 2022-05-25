@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -43,14 +42,14 @@ ReliCBReportRepository reliCBReportRepository =
 
 //-------------------------------------------------------------
 class AppRouter {
-
   static ReliMonitorBloc reliMonitorBloc = ReliMonitorBloc();
   static ReliReportBloc reliReportBloc = ReliReportBloc();
   static LoginBloc loginBloc = LoginBloc();
   static DeforReportBloc deforReportBloc = DeforReportBloc();
   static DeforMonitorBloc deforMonitorBloc = DeforMonitorBloc();
   static WFMonitorBloc wfMonitorBloc = WFMonitorBloc();
-  static WaterProofingReportBloc waterProofingReportBloc = WaterProofingReportBloc();
+  static WaterProofingReportBloc waterProofingReportBloc =
+      WaterProofingReportBloc();
   Route onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
@@ -65,10 +64,10 @@ class AppRouter {
           ),
         );
         break;
-      case '/modescreen':
-        return MaterialPageRoute(
-            settings: routeSettings, builder: (context) => TestScreen());
-        break;
+      // case '/modescreen':
+      //   return MaterialPageRoute(
+      //       settings: routeSettings, builder: (context) => TestScreen());
+      //   break;
       case '/reliabilityreportscreen':
         return MaterialPageRoute(
           builder: (context) => BlocProvider<ReliReportBloc>.value(
@@ -87,13 +86,11 @@ class AppRouter {
               value: deforReportBloc, child: DeformationReportScreen()),
         );
         break;
-        case '/waterproofingreportscreen':
+      case '/waterproofingreportscreen':
         return MaterialPageRoute(
-          builder: 
-          (context) => BlocProvider<WaterProofingReportBloc>.value(
-              value: waterProofingReportBloc, child: WaterProofingReportScreen())
-          
-        );
+            builder: (context) => BlocProvider<WaterProofingReportBloc>.value(
+                value: waterProofingReportBloc,
+                child: WaterProofingReportScreen()));
         break;
       case '/monitormodescreen':
         return MaterialPageRoute(builder: (context) => MonitorModeScreen());
@@ -110,13 +107,10 @@ class AppRouter {
                   child: DeformationMonitorScreen(),
                 ));
         break;
-        case '/waterproofingmonitorscreen':
+      case '/waterproofingmonitorscreen':
         return MaterialPageRoute(
-          builder: 
-          (context) => BlocProvider<WFMonitorBloc>.value(
-            value: wfMonitorBloc, child: WaterProofingMonitorScreen())
-           
-        );
+            builder: (context) => BlocProvider<WFMonitorBloc>.value(
+                value: wfMonitorBloc, child: WaterProofingMonitorScreen()));
         break;
       default:
         return MaterialPageRoute(builder: (context) => HomeScreen());

@@ -1,20 +1,25 @@
 import 'package:equatable/equatable.dart';
 
 class WaterProofingMonitorData extends Equatable {
-  int nhietDoCaiDat;
-  int nhietDoHienTai;
-  int thoiGianKiemTraCaiDat;
-  int thoiGianKiemTraHienTai;
-  bool alarm;
-  bool running;
   WaterProofingMonitorData(
-      this.nhietDoCaiDat,
+      {this.nhietDoCaiDat,
       this.nhietDoHienTai,
       this.thoiGianKiemTraCaiDat,
       this.thoiGianKiemTraHienTai,
       this.alarm,
-      this.running);
+      this.running});
+  String nhietDoCaiDat;
+  String nhietDoHienTai;
+  String thoiGianKiemTraCaiDat;
+  String thoiGianKiemTraHienTai;
+  bool alarm;
+  bool running;
   @override
   // TODO: implement props
-  List<Object> get props => [nhietDoCaiDat, nhietDoHienTai, thoiGianKiemTraCaiDat, thoiGianKiemTraHienTai];
+  List<Object> get props => [
+        nhietDoCaiDat,
+        nhietDoHienTai,
+        thoiGianKiemTraCaiDat,
+        thoiGianKiemTraHienTai
+      ];
 }

@@ -34,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     userController.text = UsernamePreferences.getUsername() ?? 'admin';
     passController.text = PasswordPreferences.getPassword() ?? '';
-
   }
 
   @override
@@ -68,11 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   loginState.loginData.employee.firstName;
               String employeeLastNameOverall =
                   loginState.loginData.employee.lastName;
-              Navigator.popAndPushNamed(context, '/modescreen', arguments: {
-                'id': employeeIdOverall.toString(),
-                'firstName': employeeFirstNameOverall.toString(),
-                'lastName': employeeLastNameOverall.toString()
-              });
+              Navigator.popAndPushNamed(context, '/monitormodescreen',
+                  arguments: {
+                    'id': employeeIdOverall.toString(),
+                    'firstName': employeeFirstNameOverall.toString(),
+                    'lastName': employeeLastNameOverall.toString()
+                  });
             } else if (loginState is LoginStateLoginFailure) {
               loadingDialog.dismiss();
               if (loginState.errorPackage.message != null) {
@@ -153,8 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onChanged: (_) {
                         BlocProvider.of<LoginBloc>(context).add(
-                          LoginEventChecking(userName: userController.text,passWord: passController.text
-                        ));
+                            LoginEventChecking(
+                                userName: userController.text,
+                                passWord: passController.text));
                       },
                     ),
                     SizedBox(height: SizeConfig.screenHeight * 0.04),
@@ -182,8 +183,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           onChanged: (_) {
                             BlocProvider.of<LoginBloc>(context).add(
-                              LoginEventChecking(passWord: passController.text,
-                              userName: userController.text),
+                              LoginEventChecking(
+                                  passWord: passController.text,
+                                  userName: userController.text),
                             );
                           },
                         ),
@@ -203,11 +205,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: SizeConfig.screenHeight * 0.0192,
                     ),
                     CustomizedButton(
-                text: "Đăng nhập",
-                onPressed: () {
-                  Navigator.pushNamed(context, '/modescreen');
-                },
-              ),
+                      text: "Đăng nhập",
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/loginscreen');
+                      },
+                    ),
                     SizedBox(height: SizeConfig.screenHeight * 0.0768),
                   ],
                 ),

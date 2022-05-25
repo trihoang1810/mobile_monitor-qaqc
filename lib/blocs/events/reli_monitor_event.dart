@@ -39,6 +39,7 @@ class ReliCBMonitorEventDataUpdated extends ReliMonitorEvent {
   @override
   List<Object> get props => [timestamp, reliCBMonitorData];
 }
+
 class ReliMonitorEventConnectFail extends ReliMonitorEvent {
   ErrorPackage errorPackage;
   ReliMonitorEventConnectFail({this.errorPackage});

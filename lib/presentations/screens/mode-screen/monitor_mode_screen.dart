@@ -51,8 +51,8 @@ class _MonitorModeScreenState extends State<MonitorModeScreen> {
                 Navigator.pushNamed(context, '/deformationmonitorscreen');
               },
             ),
-             SizedBox(height: SizeConfig.screenHeight * 0.0192),
-              CustomizedButton(
+            SizedBox(height: SizeConfig.screenHeight * 0.0192),
+            CustomizedButton(
               text: 'Chống thấm',
               onPressed: () {
                 Navigator.pushNamed(context, '/waterproofingmonitorscreen');

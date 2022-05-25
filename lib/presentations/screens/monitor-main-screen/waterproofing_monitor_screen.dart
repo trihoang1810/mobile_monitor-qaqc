@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -7,14 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/blocs/blocs/waterproofing_monitor_bloc.dart';
 import 'package:mobile_app/blocs/events/waterproofing_monitor_event.dart';
 import 'package:mobile_app/blocs/states/waterproofing_monitor_state.dart';
+import 'package:mobile_app/model/waterproofing_monitor_data.dart';
 import 'package:mobile_app/presentations/screens/monitor-main-screen/models/reliabilities/operating_params_reliability.dart';
 import 'package:mobile_app/presentations/widgets/constant.dart';
 import 'package:mobile_app/presentations/widgets/widget.dart';
-import 'package:mobile_app/blocs/blocs/reli_monitor_bloc.dart';
-import 'package:mobile_app/blocs/events/reli_monitor_event.dart';
-import 'package:mobile_app/blocs/states/reli_monitor_state.dart';
 import 'package:mobile_app/model/error_package.dart';
-import 'package:mobile_app/model/reliability_cb_monitor_data.dart';
 import 'package:mobile_app/model/reliability_monitor_data.dart';
 import 'package:mobile_app/presentations/dialog/dialog.dart';
 import 'package:signalr_core/signalr_core.dart';
@@ -26,15 +24,16 @@ class WaterProofingMonitorScreen extends StatefulWidget {
       new _WaterProofingMonitorScreenState();
 }
 
-class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen> {
+class _WaterProofingMonitorScreenState
+    extends State<WaterProofingMonitorScreen> {
   String data1 = "null";
   String data2 = "null";
   String data3 = "null";
   String data4 = "null";
-  
+
   bool warning = false;
   bool running = false;
- 
+
   HubConnection hubConnection;
   @override
   void initState() {
@@ -48,14 +47,14 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
       hubConnection.serverTimeoutInMilliseconds = 10000;
       hubConnection.onclose((error) {
         return error != null
-            ? BlocProvider.of<ReliMonitorBloc>(context).add(
-                ReliMonitorEventConnectFail(
+            ? BlocProvider.of<WFMonitorBloc>(context).add(
+                WFMonitorEventConnectFail(
                     errorPackage: ErrorPackage(
                         message: "Ngắt kết nối",
                         detail: "Đã ngắt kết nối đến máy chủ!")))
             : null;
       });
-    //  hubConnection.on("MonitorReliability", monitorReliabilityHandlers);
+      hubConnection.on("WaterProofingMonitor", monitorWaterProofHandlers);
     } on TimeoutException {
       BlocProvider.of<WFMonitorBloc>(context).add(WFMonitorEventConnectFail(
           errorPackage: ErrorPackage(
@@ -99,14 +98,13 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
-                unselectedLabelColor: Colors.blueGrey,
+              unselectedLabelColor: Colors.blueGrey,
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: Constants.secondaryColor,
               ),
               tabs: [
                 Tab(text: "Chống thấm"),
-            
               ],
             ),
             backgroundColor: Constants.mainColor,
@@ -134,8 +132,7 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
             title: Text("Giám sát kiểm tra độ chống thấm"),
           ),
           backgroundColor: Colors.white,
-          body:
-           BlocConsumer<WFMonitorBloc, WFMonitorState>(
+          body: BlocConsumer<WFMonitorBloc, WFMonitorState>(
             listener: (context, wfMonitorState) async {
               if (wfMonitorState is WFMonitorStateConnectFail) {
                 loadingDialog.dismiss();
@@ -164,7 +161,7 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
               } else if (wfMonitorState is WFMonitorStateDataUpdated) {
                 loadingDialog.dismiss();
                 // print('chụp được state nè');
-                 // data1 = wfMonitorState.reliMonitorData.soLanDongNapCaiDat
+                // data1 = wfMonitorState.reliMonitorData.soLanDongNapCaiDat
                 //     .toString();
                 // data2 = wfMonitorState.reliMonitorData.soLanDongNapHienTai
                 //     .toString();
@@ -177,7 +174,7 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
 
               } else if (wfMonitorState is WFMonitorStateLoadingRequest) {
                 loadingDialog.show();
-              } 
+              }
               if (wfMonitorState is WFMonitorStateConnectFail) {
                 loadingDialog.dismiss();
                 AlertDialogOneBtnCustomized(
@@ -188,7 +185,7 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
                         closePressed: () {},
                         onPressedBtn: () {})
                     .show();
-              } 
+              }
             },
             builder: (context, reliMonitorState) => WillPopScope(
               onWillPop: () async {
@@ -220,8 +217,8 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
                               onPressed: () {
                                 // BlocProvider.of<ReliMonitorBloc>(context)
                                 //     .add(ReliMonitorEventSearchingClicked());
-                                BlocProvider.of<ReliMonitorBloc>(context).add(
-                                    ReliMonitorEventHubConnected(
+                                BlocProvider.of<WFMonitorBloc>(context).add(
+                                    WFMonitorEventHubConnected(
                                         hubConnection: hubConnection));
                               },
                               text: "Truy xuất",
@@ -367,7 +364,6 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
                         ),
                       ),
                     ),
-                    
                   ],
                 ),
               ),
@@ -378,20 +374,25 @@ class _WaterProofingMonitorScreenState extends State<WaterProofingMonitorScreen>
     );
   }
 
-  void monitorReliabilityHandlers(List<dynamic> data) {
+  void monitorWaterProofHandlers(List<dynamic> data) {
     print(Map<String, dynamic>.from(data[0])["alarm"]);
-    BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventDataUpdated(
-        reliMonitorData: ReliMonitorData(
-            alarm: Map<String, dynamic>.from(data[0])["alarm"],
-            running: Map<String, dynamic>.from(data[0])["running"],
-            thoiGianGiuNapDong:
-                Map<String, dynamic>.from(data[0])["timeLidClose"],
-            thoiGianGiuNapMo: Map<String, dynamic>.from(data[0])["timeLidOpen"],
-            soLanDongNapCaiDat:
-                Map<String, dynamic>.from(data[0])["numberClosingSp"],
-            soLanDongNapHienTai:
-                Map<String, dynamic>.from(data[0])["numberClosingPv"])));
+    BlocProvider.of<WFMonitorBloc>(context).add(WFMonitorEventDataUpdated(
+      waterProofingMonitorData: WaterProofingMonitorData(
+        alarm: Map<String, dynamic>.from(data[0])["alarm"],
+        running: Map<String, dynamic>.from(data[0])["status"],
+        nhietDoCaiDat: Map<String, dynamic>.from(data[0])["temperatureSp"],
+        nhietDoHienTai: Map<String, dynamic>.from(data[0])["TemperaturePv"],
+        thoiGianKiemTraCaiDat: Map<String, dynamic>.from(data[0])["HourSp"] +
+            ' giờ ' +
+            Map<String, dynamic>.from(data[0])["MinuteSp"] +
+            ' phút',
+        thoiGianKiemTraHienTai: Map<String, dynamic>.from(data[0])["HourPv"] +
+            ' giờ ' +
+            Map<String, dynamic>.from(data[0])["MinutePv"] +
+            ' phút ' +
+            Map<String, dynamic>.from(data[0])["SecondPv"] +
+            ' giây',
+      ),
+    ));
   }
-
- 
 }

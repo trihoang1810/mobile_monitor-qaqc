@@ -56,8 +56,8 @@ class _ReliabilityMonitorScreenState extends State<ReliabilityMonitorScreen> {
                         detail: "Đã ngắt kết nối đến máy chủ!")))
             : null;
       });
-      hubConnection.on("MonitorReliability", monitorReliabilityHandlers);
-      hubConnection.on("MonitorDeformation", monitorDeformationHandlers);
+      hubConnection.on("SoftCloseMonitor", monitorReliabilityHandlers);
+      hubConnection.on("ForcedCloseMonitor", monitorDeformationHandlers);
     } on TimeoutException {
       BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventConnectFail(
           errorPackage: ErrorPackage(
@@ -101,7 +101,7 @@ class _ReliabilityMonitorScreenState extends State<ReliabilityMonitorScreen> {
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
-                unselectedLabelColor: Colors.blueGrey,
+              unselectedLabelColor: Colors.blueGrey,
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: Constants.secondaryColor,
@@ -576,7 +576,7 @@ class _ReliabilityMonitorScreenState extends State<ReliabilityMonitorScreen> {
     BlocProvider.of<ReliMonitorBloc>(context).add(ReliMonitorEventDataUpdated(
         reliMonitorData: ReliMonitorData(
             alarm: Map<String, dynamic>.from(data[0])["alarm"],
-            running: Map<String, dynamic>.from(data[0])["running"],
+            running: Map<String, dynamic>.from(data[0])["status"],
             thoiGianGiuNapDong:
                 Map<String, dynamic>.from(data[0])["timeLidClose"],
             thoiGianGiuNapMo: Map<String, dynamic>.from(data[0])["timeLidOpen"],
@@ -592,7 +592,7 @@ class _ReliabilityMonitorScreenState extends State<ReliabilityMonitorScreen> {
     BlocProvider.of<ReliMonitorBloc>(context).add(ReliCBMonitorEventDataUpdated(
         reliCBMonitorData: ReliCBMonitorData(
             alarm: Map<String, dynamic>.from(data[0])["alarm"],
-            running: Map<String, dynamic>.from(data[0])["running"],
+            running: Map<String, dynamic>.from(data[0])["status"],
             thoiGianGiuNapDong:
                 Map<String, dynamic>.from(data[0])["timeLidClose"],
             thoiGianGiuNapMo: Map<String, dynamic>.from(data[0])["timeLidOpen"],

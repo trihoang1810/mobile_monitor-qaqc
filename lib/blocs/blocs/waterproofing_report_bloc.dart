@@ -7,6 +7,6 @@ class WaterProofingReportBloc extends Bloc<WaterProofingReportEvent, WaterProofi
 
   @override
   Stream<WaterProofingReportState> mapEventToState(WaterProofingReportEvent event) async* {
-    //
+    
   }
 }

@@ -2,9 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:mobile_app/model/error_package.dart';
 import 'package:mobile_app/model/waterproofing_monitor_data.dart';
 
-abstract class WFMonitorState extends Equatable{
-
-}
+abstract class WFMonitorState extends Equatable {}
 
 class WFMonitorStateInit extends WFMonitorState {
   DateTime timestamp;
@@ -40,10 +38,10 @@ class WFMonitorStateLoadingRequest extends WFMonitorState {
 
 class WFMonitorStateConnectSucessful extends WFMonitorState {
   DateTime timestamp;
-  WaterProofingMonitorData reliMonitorData;
-  WFMonitorStateConnectSucessful({this.reliMonitorData, this.timestamp});
+  WaterProofingMonitorData waterProofMonitorData;
+  WFMonitorStateConnectSucessful({this.waterProofMonitorData, this.timestamp});
   @override
-  List<Object> get props => [timestamp, reliMonitorData];
+  List<Object> get props => [timestamp, waterProofMonitorData];
 }
 
 class WFMonitorStateConnectFail extends WFMonitorState {
@@ -56,8 +54,8 @@ class WFMonitorStateConnectFail extends WFMonitorState {
 
 class WFMonitorStateDataUpdated extends WFMonitorState {
   DateTime timestamp;
-  WaterProofingMonitorData reliMonitorData;
-  WFMonitorStateDataUpdated({this.reliMonitorData, this.timestamp});
+  WaterProofingMonitorData waterProofMonitorData;
+  WFMonitorStateDataUpdated({this.waterProofMonitorData, this.timestamp});
   @override
-  List<Object> get props => [timestamp, reliMonitorData];
+  List<Object> get props => [timestamp, waterProofMonitorData];
 }

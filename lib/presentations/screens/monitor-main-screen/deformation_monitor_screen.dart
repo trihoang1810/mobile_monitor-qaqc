@@ -63,7 +63,7 @@ class _DeformationMonitorScreenState extends State<DeformationMonitorScreen> {
                         detail: "Đã ngắt kết nối đến máy chủ!")))
             : null;
       });
-      hubConnection.on("MonitorEndurance", monitorEnduranceHandlers);
+      hubConnection.on("EnduranceMonitor", monitorEnduranceHandlers);
     } on TimeoutException {
       BlocProvider.of<DeforMonitorBloc>(context).add(
           DeforMonitorEventConnectFail(
@@ -108,11 +108,9 @@ class _DeformationMonitorScreenState extends State<DeformationMonitorScreen> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-         
           appBar: AppBar(
-            
             bottom: TabBar(
-               unselectedLabelColor: Colors.blueGrey,
+              unselectedLabelColor: Colors.blueGrey,
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: Constants.secondaryColor,

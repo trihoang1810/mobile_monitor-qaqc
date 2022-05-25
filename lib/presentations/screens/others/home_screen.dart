@@ -24,13 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               SizedBox(height: SizeConfig.screenHeight * 0.0384),
               SizedBox(height: SizeConfig.screenHeight * 0.05),
-              MainAppName(
-                  text: "PHÒNG GIÁM SÁT KIỂM TRA CHẤT LƯỢNG SẢN PHẨM"),
+              MainAppName(text: "PHÒNG GIÁM SÁT KIỂM TRA CHẤT LƯỢNG SẢN PHẨM"),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               CustomizedButton(
                 text: "Đăng nhập",
                 onPressed: () {
-                  Navigator.pushNamed(context, '/loginscreen');
+                  Navigator.pushNamed(context, '/monitormodescreen');
                 },
               ),
             ],

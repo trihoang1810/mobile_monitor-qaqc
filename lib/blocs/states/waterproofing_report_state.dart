@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/model/error_package.dart';
-import 'package:mobile_app/model/reliability_data.dart';
+import 'package:mobile_app/model/waterproofing_data.dart';
 
 abstract class WaterProofingReportState extends Equatable {}
 
@@ -35,11 +35,10 @@ class WFReportStateInit extends WaterProofingReportState {
   List<Object> get props => [timestamp];
 }
 
-
 class WFReportStateLoadingSuccessful extends WaterProofingReportState {
   DateTime timestamp;
-  ReliReport reliReport;
-  WFReportStateLoadingSuccessful({this.reliReport, this.timestamp});
+  WaterProofingData waterProofReport;
+  WFReportStateLoadingSuccessful({this.waterProofReport, this.timestamp});
 
   @override
   // TODO: implement props
@@ -49,8 +48,7 @@ class WFReportStateLoadingSuccessful extends WaterProofingReportState {
 class WFReportStateLoadingFailure extends WaterProofingReportState {
   DateTime timestamp;
   ErrorPackage errorPackage;
-WFReportStateLoadingFailure({this.timestamp, this.errorPackage});
+  WFReportStateLoadingFailure({this.timestamp, this.errorPackage});
   @override
   List<Object> get props => [timestamp];
 }
-

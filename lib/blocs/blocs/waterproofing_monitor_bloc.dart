@@ -18,34 +18,41 @@ class WFMonitorBloc extends Bloc<WFMonitorEvent, WFMonitorState> {
             warning: false));
   @override
   Stream<WFMonitorState> mapEventToState(WFMonitorEvent event) async* {
-    // if (event is ReliMonitorEventHubConnected) {
-    //   yield WFMonitorStateLoadingRequest(timestamp: );
-    //   event.hubConnection.state == HubConnectionState.disconnected
-    //       ? await event.hubConnection.start().onError((error, stackTrace) {
-    //           return WFMonitorBloc().add(WFMonitorEventConnectFail(
-    //               errorPackage: ErrorPackage(
-    //                   message: "Không thể kết nối tới máy chủ",
-    //                   detail: "vui lòng kiểm tra đường truyền")));
-    //         })
-    //       : await event.hubConnection.stop();
-    //   if (event.hubConnection.state == HubConnectionState.disconnected) {
-    //     // print('Trạng thái hub:' + event.hubConnection.state.toString());
-    //     yield WFMonitorStateConnectFail(
-    //         errorPackage: ErrorPackage(
-    //             message: "Ngắt kết nối",
-    //             detail: "Đã ngắt kết nối tới máy chủ"));
-    //   } else if (event.hubConnection.state == HubConnectionState.connected) {
-    //     WaterProofingMonitorData reliMonitorData = WaterProofingMonitorData(
-    //       //
-    //       );
-    //     yield WFMonitorStateConnectSucessful(
-    //       reliMonitorData: reliMonitorData,
-    //     );
-    //   }
-    // } else if (event is ReliMonitorEventDataUpdated) {
-     
-    //   yield WFMonitorStateDataUpdated(
-    //       timestamp: DateTime.now(), reliMonitorData: event.reliMonitorData);
-    // }
+    if (event is WFMonitorEventHubConnected) {
+      yield WFMonitorStateLoadingRequest(timestamp: event.timestamp);
+      event.hubConnection.state == HubConnectionState.disconnected
+          ? await event.hubConnection.start().onError((error, stackTrace) {
+              return WFMonitorBloc().add(WFMonitorEventConnectFail(
+                  errorPackage: ErrorPackage(
+                      message: "Không thể kết nối tới máy chủ",
+                      detail: "vui lòng kiểm tra đường truyền")));
+            })
+          : await event.hubConnection.stop();
+      if (event.hubConnection.state == HubConnectionState.disconnected) {
+        // print('Trạng thái hub:' + event.hubConnection.state.toString());
+        yield WFMonitorStateConnectFail(
+            errorPackage: ErrorPackage(
+                message: "Ngắt kết nối",
+                detail: "Đã ngắt kết nối tới máy chủ"));
+      } else if (event.hubConnection.state == HubConnectionState.connected) {
+        WaterProofingMonitorData waterProofMonitorData =
+            WaterProofingMonitorData(
+          alarm: false,
+          nhietDoCaiDat: '0',
+          nhietDoHienTai: '0',
+          running: false,
+          thoiGianKiemTraCaiDat: '0',
+          thoiGianKiemTraHienTai: '0',
+        );
+        yield WFMonitorStateConnectSucessful(
+          timestamp: event.timestamp,
+          waterProofMonitorData: waterProofMonitorData,
+        );
+      }
+    } else if (event is WFMonitorEventDataUpdated) {
+      yield WFMonitorStateDataUpdated(
+          timestamp: DateTime.now(),
+          waterProofMonitorData: event.waterProofingMonitorData);
     }
-    }
+  }
+}
